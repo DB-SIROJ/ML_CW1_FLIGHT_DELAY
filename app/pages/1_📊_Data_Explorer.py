@@ -2,7 +2,7 @@ import plotly.express as px
 import streamlit as st
 
 st.set_page_config(page_title="Data Explorer", page_icon="📊", layout="wide")
-from utils import TARGET, load_airports, load_sample, page_header  # noqa: E402
+from utils import TARGET, airport_label, load_airports, load_sample, page_header  # noqa: E402
 
 page_header("📊 Data Explorer", "Interactive exploratory data analysis (150k-row random sample of operated flights)")
 df = load_sample()
@@ -13,7 +13,7 @@ with st.sidebar:
                             format_func=lambda m: {1: "January", 2: "February", 3: "March"}[m])
     carriers = st.multiselect("Carrier", sorted(df.CARRIER_NAME.unique()))
     top_airports = df.ORIGIN.value_counts().index.tolist()
-    origins = st.multiselect("Origin airport", top_airports)
+    origins = st.multiselect("Origin airport", top_airports, format_func=airport_label)
 f = df[df.MONTH.isin(months)]
 if carriers:
     f = f[f.CARRIER_NAME.isin(carriers)]
