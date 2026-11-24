@@ -66,7 +66,8 @@ def test_saved_model_reproduces_reported_test_auc():
     assert auc == pytest.approx(metrics.loc["LightGBM", "ROC-AUC"], abs=0.01)
 
 
-APP_PAGES = [ROOT / "app" / "Home.py"] + sorted((ROOT / "app" / "pages").glob("*.py"))
+# views/home.py uses st.page_link, so it is exercised through the router (Home.py) instead of directly
+APP_PAGES = [ROOT / "app" / "Home.py"] + sorted(p for p in (ROOT / "app" / "views").glob("*.py") if p.stem != "home")
 
 
 @pytest.mark.parametrize("page", APP_PAGES, ids=lambda p: p.stem)
@@ -74,10 +75,10 @@ def test_streamlit_page_runs_without_errors(page):
     from streamlit.testing.v1 import AppTest
     at = AppTest.from_file(str(page), default_timeout=180).run()
     assert not at.exception, [e.value for e in at.exception]
-    if "Prediction" in page.name:
+    if page.stem == "checker":
         at.button[0].click().run()
         assert not at.exception
-        assert any("Likely" in m.value for m in at.markdown)
-    if "Training" in page.name:
+        assert any("risk:" in m.value for m in at.markdown)
+    if page.stem == "lab":
         at.button[0].click().run(timeout=300)
-        assert not at.exception and at.success
+        assert not at.exception and any("ROC-AUC" in m.label for m in at.metric)

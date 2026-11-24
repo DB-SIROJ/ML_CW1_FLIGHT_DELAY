@@ -13,7 +13,7 @@ arrives **≥ 15 minutes late** (the U.S. DOT definition, `ARR_DEL15`).
 | **Validation** | Temporal split: train Jan–Feb · validate 1–14 Mar · test 15–31 Mar |
 | **Final model** | LightGBM: test ROC-AUC 0.672, PR-AUC 0.381 (no-skill PR-AUC = 0.218), best calibration |
 | **App** | Multi-page Streamlit dashboard: exploration, preprocessing, live training, prediction, evaluation |
-| **Tests** | 23 pytest tests (cleaning, leakage checks, models, saved artefacts, every app page), run by GitHub Actions |
+| **Tests** | 24 pytest tests (cleaning, leakage checks, models, saved artefacts, every app page), run by GitHub Actions |
 | **Live demo** | https://flight-delay-cw1.streamlit.app |
 
 ## Results (held-out test set, 328,360 flights)
@@ -33,9 +33,10 @@ same model. That figure is optimistic because flights from the same storm day en
 
 ```
 ├── app/                      # Streamlit multi-page application
-│   ├── Home.py               #   entry point
+│   ├── Home.py               #   entry point + navigation
+│   ├── ui.py                 #   shared look: colours, CSS, explanation blocks, glossary
 │   ├── utils.py              #   cached loaders + feature builder for inference
-│   └── pages/                #   Data Explorer · Preprocessing · Model Training · Prediction · Evaluation
+│   └── views/                #   overview · explore · prep · lab · results · checker · about
 ├── data/
 │   ├── raw/                  # BTS monthly CSVs (Jan, Feb, Mar 2025)
 │   ├── external/airports.csv # OurAirports metadata
@@ -97,13 +98,17 @@ docker run --rm -v "$PWD":/app flight-delay \
 3. Deploy. The app needs only `data/processed/` and `models/`, not the raw CSVs.
 
 ## App pages
-| Page | Content |
-|---|---|
-| 📊 Data Explorer | Filters (month, carrier, airport), delay patterns, distributions, correlation matrix, airport map, summary statistics |
-| 🧹 Preprocessing | Cleaning log, missing values, outlier and transformation explorer, scaler comparison, encodings, temporal split |
-| 🏋️ Model Training | Choose an algorithm, hyperparameters and feature groups, then train live and see validation/test metrics and curves |
-| 🔮 Prediction | Pick a carrier, airports (full names), date and times. Yesterday's disruption levels are looked up automatically from the data, with an optional what-if override. Gauge, explanation, hour-of-day what-if, batch CSV scoring |
-| 📈 Evaluation | Model comparison table, bootstrap CIs, ROC/PR curves, threshold explorer with confusion matrix, permutation importance, per-segment performance |
+The app is written for non-experts: every page opens with an "In plain words" box, every chart has an automatically computed takeaway, and a glossary sits in the sidebar.
+
+| Section | Page | Content |
+|---|---|---|
+| Start | 🏠 Overview | The question, how the project works in 4 steps, headline findings |
+| Understand the data | 🔎 Explore the data | Filters, then *When? / Which airline? / Where? / How late? / What goes together? / Numbers & raw data* tabs |
+| | 🧹 How the data was prepared | The 6 preparation steps (clean, missing values, outliers, new features, encode & scale, split), each with an interactive demo |
+| Build & evaluate | 🧪 Model lab | Pick an algorithm and preset (Quick / Balanced / Tuned / Custom), train live, compare runs on a leaderboard |
+| | 🏆 Results & model comparison | Final model in plain words, all models side by side, confidence intervals, curves, threshold explorer, importance, per-segment performance |
+| Use it | 🛫 Delay checker | Ticket-style input with full airport names. Yesterday's disruption is looked up automatically. Risk verdict, **SHAP explanation of why**, best departure time, batch CSV scoring |
+| More | 📘 About | Data sources, method, limitations, ethics, glossary |
 
 ## Data sources and licences
 * **U.S. Bureau of Transportation Statistics**, *Reporting Carrier On-Time Performance (1987–present)*, TranStats:
