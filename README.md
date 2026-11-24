@@ -13,7 +13,8 @@ arrives **≥ 15 minutes late** (the U.S. DOT definition, `ARR_DEL15`).
 | **Validation** | Temporal split: train Jan–Feb · validate 1–14 Mar · test 15–31 Mar |
 | **Final model** | LightGBM: test ROC-AUC 0.672, PR-AUC 0.381 (no-skill PR-AUC = 0.218), best calibration |
 | **App** | Multi-page Streamlit dashboard: exploration, preprocessing, live training, prediction, evaluation |
-| **Live demo** | `<add your Streamlit Community Cloud URL here>` |
+| **Tests** | 23 pytest tests (cleaning, leakage checks, models, saved artefacts, every app page), run by GitHub Actions |
+| **Live demo** | https://flight-delay-cw1.streamlit.app |
 
 ## Results (held-out test set, 328,360 flights)
 
@@ -44,6 +45,7 @@ same model. That figure is optimistic because flights from the same storm day en
 │   └── flight_delay_analysis.ipynb   # the full, executed analysis
 ├── reports/figures/          # figures exported by the notebook (used in the report)
 ├── scripts/build_notebook.py # generates the notebook skeleton
+├── tests/                    # pytest suite (run automatically by GitHub Actions)
 ├── src/
 │   ├── features.py           # loading, cleaning, joining, feature engineering (shared by notebook and app)
 │   └── modeling.py           # preprocessing pipeline, model factory, metrics
@@ -76,6 +78,11 @@ streamlit run app/Home.py
 ```
 Then open http://localhost:8501.
 
+**Run the tests:**
+```bash
+pytest -v
+```
+
 ### Option B: Docker (fully reproducible)
 ```bash
 docker build -t flight-delay .
@@ -88,6 +95,15 @@ docker run --rm -v "$PWD":/app flight-delay \
 1. Push this repository to GitHub.
 2. On https://share.streamlit.io choose **New app**, select the repository and branch `main`, and set **Main file path** to `app/Home.py`.
 3. Deploy. The app needs only `data/processed/` and `models/`, not the raw CSVs.
+
+## App pages
+| Page | Content |
+|---|---|
+| 📊 Data Explorer | Filters (month, carrier, airport), delay patterns, distributions, correlation matrix, airport map, summary statistics |
+| 🧹 Preprocessing | Cleaning log, missing values, outlier and transformation explorer, scaler comparison, encodings, temporal split |
+| 🏋️ Model Training | Choose an algorithm, hyperparameters and feature groups, then train live and see validation/test metrics and curves |
+| 🔮 Prediction | Pick a carrier, airports (full names), date and times. Yesterday's disruption levels are looked up automatically from the data, with an optional what-if override. Gauge, explanation, hour-of-day what-if, batch CSV scoring |
+| 📈 Evaluation | Model comparison table, bootstrap CIs, ROC/PR curves, threshold explorer with confusion matrix, permutation importance, per-segment performance |
 
 ## Data sources and licences
 * **U.S. Bureau of Transportation Statistics**, *Reporting Carrier On-Time Performance (1987–present)*, TranStats:
