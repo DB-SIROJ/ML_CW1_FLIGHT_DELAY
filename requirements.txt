@@ -1,0 +1,19 @@
+# Core data & ML (pinned for reproducibility; tested with Python 3.13)
+numpy==2.5.3
+pandas==3.0.5
+scipy==1.18.1
+scikit-learn==1.9.1
+lightgbm==4.7.0
+joblib==1.6.0
+pyarrow==26.0.1
+holidays==0.109
+# Visualisation
+matplotlib==3.11.2
+seaborn==0.13.2
+plotly==7.1.0
+# App
+streamlit==1.67.0
+# Notebook
+jupyter==1.1.1
+nbconvert==7.17.2
+ipykernel==7.4.0
