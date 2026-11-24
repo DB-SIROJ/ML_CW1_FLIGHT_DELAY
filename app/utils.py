@@ -111,6 +111,33 @@ def prev_day_rates(origin: str, dest: str, carrier: str, date) -> tuple[dict, bo
     return out, actual
 
 
+CONDITION_LEVELS = {  # user-facing description -> percentile of each entity's historical daily disruption
+    "🌤️ Calm": 0.10,
+    "⛅ Normal": 0.50,
+    "🌧️ Disrupted": 0.85,
+    "⛈️ Severe": 0.97,
+}
+
+
+def condition_rates(origin: str, dest: str, carrier: str, level: str) -> dict:
+    """Translate a plain description of current conditions into disruption shares.
+
+    Used for dates outside the data (e.g. tomorrow). Each entity gets the chosen percentile of its OWN
+    history, so 'Disrupted' at a storm-prone airport means more than at a calm one.
+    """
+    d = load_prev_rates()
+    q = CONDITION_LEVELS[level]
+    keys = {"origin": ("airport_origin", origin), "dest": ("airport_dest", dest),
+            "carrier": ("carrier", carrier), "national": ("national", "ALL")}
+    out = {}
+    for name, (lvl, key) in keys.items():
+        s = d[(d.LEVEL == lvl) & (d.KEY == key) & (d.N_PREV_DAY >= 5)].RATE
+        if len(s) < 10:
+            s = d.loc[d.LEVEL == lvl, "RATE"]
+        out[name] = float(s.quantile(q))
+    return out
+
+
 def airport_label(code: str) -> str:
     """'ATL — Hartsfield-Jackson Atlanta International Airport (GA)'."""
     ap = load_airports().set_index("IATA")
