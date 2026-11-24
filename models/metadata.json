@@ -1,0 +1,150 @@
+{
+  "final_model": "LightGBM",
+  "threshold": 0.175,
+  "thresholds": {
+    "Logistic Regression": 0.4149999999999999,
+    "Decision Tree": 0.4099999999999999,
+    "Random Forest": 0.38499999999999995,
+    "LightGBM": 0.175
+  },
+  "best_params": {
+    "Logistic Regression": {
+      "C": 0.02161894240657444,
+      "class_weight": "balanced"
+    },
+    "Decision Tree": {
+      "class_weight": "balanced",
+      "criterion": "entropy",
+      "max_depth": 18,
+      "min_samples_leaf": 2000
+    },
+    "Random Forest": {
+      "n_estimators": 100,
+      "min_samples_leaf": 20,
+      "max_samples": 0.3,
+      "max_features": 0.3,
+      "max_depth": 14,
+      "class_weight": "balanced_subsample"
+    },
+    "LightGBM": {
+      "colsample_bytree": 0.9711008778424264,
+      "learning_rate": 0.062221674590294686,
+      "min_child_samples": 876,
+      "n_estimators": 545,
+      "num_leaves": 67,
+      "reg_lambda": 0.008386394780402562,
+      "subsample": 0.6964101864104046,
+      "subsample_freq": 1
+    }
+  },
+  "features": [
+    "DEP_HOUR_SIN",
+    "DEP_HOUR_COS",
+    "ARR_HOUR_SIN",
+    "ARR_HOUR_COS",
+    "DAY_OF_WEEK",
+    "IS_WEEKEND",
+    "LOG_DISTANCE",
+    "SCHED_DURATION",
+    "OVERNIGHT",
+    "LOG_ORIGIN_HOURLY_DEPS",
+    "LOG_DEST_HOURLY_ARRS",
+    "LOG_ORIGIN_DAILY_DEPS",
+    "CARRIER_DAILY_SHARE",
+    "ORIGIN_LAT",
+    "ORIGIN_LON",
+    "ORIGIN_ELEV",
+    "DEST_LAT",
+    "DEST_LON",
+    "DEST_ELEV",
+    "ORIGIN_IS_LARGE",
+    "DEST_IS_LARGE",
+    "ORIGIN_PREV_DAY_RATE",
+    "DEST_PREV_DAY_RATE",
+    "CARRIER_PREV_DAY_RATE",
+    "NATIONAL_PREV_DAY_RATE",
+    "OP_UNIQUE_CARRIER",
+    "DEP_TIME_BLOCK",
+    "ORIGIN",
+    "DEST",
+    "ROUTE",
+    "ORIGIN_STATE",
+    "DEST_STATE"
+  ],
+  "numeric": [
+    "DEP_HOUR_SIN",
+    "DEP_HOUR_COS",
+    "ARR_HOUR_SIN",
+    "ARR_HOUR_COS",
+    "DAY_OF_WEEK",
+    "IS_WEEKEND",
+    "LOG_DISTANCE",
+    "SCHED_DURATION",
+    "OVERNIGHT",
+    "LOG_ORIGIN_HOURLY_DEPS",
+    "LOG_DEST_HOURLY_ARRS",
+    "LOG_ORIGIN_DAILY_DEPS",
+    "CARRIER_DAILY_SHARE",
+    "ORIGIN_LAT",
+    "ORIGIN_LON",
+    "ORIGIN_ELEV",
+    "DEST_LAT",
+    "DEST_LON",
+    "DEST_ELEV",
+    "ORIGIN_IS_LARGE",
+    "DEST_IS_LARGE",
+    "ORIGIN_PREV_DAY_RATE",
+    "DEST_PREV_DAY_RATE",
+    "CARRIER_PREV_DAY_RATE",
+    "NATIONAL_PREV_DAY_RATE"
+  ],
+  "low_card": [
+    "OP_UNIQUE_CARRIER",
+    "DEP_TIME_BLOCK"
+  ],
+  "high_card": [
+    "ORIGIN",
+    "DEST",
+    "ROUTE",
+    "ORIGIN_STATE",
+    "DEST_STATE"
+  ],
+  "split": {
+    "train": {
+      "rows": "1018745",
+      "from": "2025-01-01",
+      "to": "2025-02-28",
+      "delay rate": "0.1975293130273032",
+      "share": "0.632"
+    },
+    "validation": {
+      "rows": "263940",
+      "from": "2025-03-01",
+      "to": "2025-03-14",
+      "delay rate": "0.16869364249450633",
+      "share": "0.164"
+    },
+    "test": {
+      "rows": "328360",
+      "from": "2025-03-15",
+      "to": "2025-03-31",
+      "delay rate": "0.21777622122061152",
+      "share": "0.204"
+    }
+  },
+  "clean_log": {
+    "rows_in": 1645503,
+    "exact_duplicates_removed": 3,
+    "invalid_clock_times_removed": 0,
+    "impossible_records_removed": 0,
+    "target_inconsistencies_corrected": 0,
+    "unexplained_missing_target_removed": 0,
+    "rows_out": 1645500
+  },
+  "fit_seconds": {
+    "Logistic Regression": 13.86607575416565,
+    "Decision Tree": 18.24550437927246,
+    "Random Forest": 72.88460755348206,
+    "LightGBM": 32.35446381568909
+  }
+}
